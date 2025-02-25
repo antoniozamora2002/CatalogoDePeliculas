@@ -61,11 +61,6 @@ Abre [http://localhost:4200](http://localhost:4200) en tu navegador.
 
 ---
 
-## 📄 **Licencia**
-Este proyecto es de código abierto bajo la licencia **MIT**.
-
----
-
 ## 👤 **Autor**
 💡 Creado por [Antonio Zamora](https://github.com/antoniozamora2002) 🤖
 
