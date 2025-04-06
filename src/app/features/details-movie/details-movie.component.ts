@@ -1,10 +1,10 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { DetailsMovieService } from '../../core/services/details-movie.service';
-import { DatePipe, DecimalPipe, UpperCasePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-details-movie',
-  imports: [DatePipe, DecimalPipe, UpperCasePipe],
+  imports: [DatePipe, UpperCasePipe],
   templateUrl: './details-movie.component.html',
   styleUrl: './details-movie.component.css',
 })
