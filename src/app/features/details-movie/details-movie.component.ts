@@ -1,6 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { DetailsMovieService } from '../../core/services/details-movie.service';
 import { DatePipe, UpperCasePipe } from '@angular/common';
+import { DetailsMovieResponse } from '../../core/models/DetailsMovie';
 
 @Component({
   selector: 'app-details-movie',
@@ -41,8 +42,8 @@ export class DetailsMovieComponent implements OnInit, OnDestroy {
     }
 
     this.detailsMovieService.getDetailsMovie(movieId).subscribe({
-      next: (response) => {
-        console.log('Detalles de la película:', response);
+      next: (response: DetailsMovieResponse) => {
+        // console.log('Detalles de la película:', response);
         this.movie = response;
       },
       error: (error) => {

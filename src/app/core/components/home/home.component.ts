@@ -21,8 +21,10 @@ export class HomeComponent implements OnInit {
   movies: Movie[] = [];
   currentPage = 1;
   totalPages = 1;
+  isLoading = true;
+  currentYear = new Date().getFullYear();
 
-  searchQuery: string = '';
+  searchQuery = '';
 
   title = 'Catálogo de Películas';
 
@@ -39,36 +41,35 @@ export class HomeComponent implements OnInit {
   }
 
   loadMovies(): void {
+    this.isLoading = true;
     this.discoverMovies
       .getDiscoverMovies(this.currentPage)
       .subscribe((response: MovieResponse) => {
-        console.log('DiscoverMovies:', response);
         this.movies = response.results;
-        this.totalPages = response.total_pages; // Aquí usamos el total de páginas de la API
-        // console.log(
-        //   `Página ${this.currentPage} de ${this.totalPages}`,
-        //   this.movies
-        // );
+        this.totalPages = response.total_pages;
+        this.isLoading = false;
       });
   }
 
   // Metodo para buscar películas
   searchMovies(): void {
-    this.searchMovieService.searchQuery.set(this.searchQuery); // Guardamos la consulta de búsqueda en el servicio
-    console.log('Busqueda:', this.searchMovieService.searchQuery());
-    this.router.navigate(['/search']); // Navegamos a la página de búsqueda
+    if (!this.searchQuery.trim()) return;
+
+    this.searchMovieService.searchQuery.set(this.searchQuery);
+    this.router.navigate(['/search']);
   }
 
   // Metodo para ver detalle de la película
   viewMovieDetails(movieId: number): void {
     this.router.navigate(['/details']);
-    this.detailsMovieService.movieId.set(movieId); // Guardamos el ID de la película en el servicio
+    this.detailsMovieService.movieId.set(movieId);
   }
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.loadMovies();
+      this.scrollToTop();
     }
   }
 
@@ -76,6 +77,41 @@ export class HomeComponent implements OnInit {
     if (this.currentPage > 1) {
       this.currentPage--;
       this.loadMovies();
+      this.scrollToTop();
     }
+  }
+
+  goToPage(page: number): void {
+    if (page !== this.currentPage && page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadMovies();
+      this.scrollToTop();
+    }
+  }
+
+  getPaginationArray(): number[] {
+    const maxVisiblePages = 5;
+    const pages: number[] = [];
+
+    let startPage = Math.max(
+      1,
+      this.currentPage - Math.floor(maxVisiblePages / 2)
+    );
+    const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+    // Ajustar si estamos cerca del final
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

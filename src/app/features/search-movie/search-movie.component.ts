@@ -29,18 +29,18 @@ export class SearchMovieComponent {
   }
 
   loadMoviesResponse(): void {
-    console.log('SearchMovies:', this.searchMovieService.searchQuery());
-    console.log('Total Pages:', this.totalPages);
+    // console.log('SearchMovies:', this.searchMovieService.searchQuery());
+    // console.log('Total Pages:', this.totalPages);
     this.searchMovieService
       .getSearchMovies(this.searchMovieService.searchQuery(), this.totalPages)
       .subscribe((response: MovieResponse) => {
-        console.log('SearchMovies:', response);
+        // console.log('SearchMovies:', response);
         this.searchResults = response;
       });
   }
 
   searchMovies(): void {
-    console.log(`Searching for: ${this.searchQuery}`);
+    // console.log(`Searching for: ${this.searchQuery}`);
     this.searchMovieService.searchQuery.set(this.searchQuery); // Update the search query in the service
     this.totalPages = 1; // Reset to the first page
 
@@ -49,7 +49,7 @@ export class SearchMovieComponent {
 
   viewMovieDetails(movieId: number): void {
     // Navigate to movie details page
-    console.log(`Viewing details for movie ID: ${movieId}`);
+    // console.log(`Viewing details for movie ID: ${movieId}`);
     this.router.navigate(['/details']);
     this.detailsMovieService.movieId.set(movieId); // Guardamos el ID de la película en el servicio
   }
