@@ -19,7 +19,7 @@ export class SearchMovieService {
       language: 'es-MX',
       query: query,
       page: page,
-      // include_adult: false,
+      // include_adult: true,
     };
     return this.http.get<any>(this.API_URL_SEARCH_MOVIE, { params });
   }

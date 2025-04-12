@@ -13,10 +13,12 @@ import { Router } from '@angular/router';
   styleUrl: './search-movie.component.css',
 })
 export class SearchMovieComponent {
-  searchQuery: string = '';
-  searchResults!: MovieResponse;
+  searchQuery = '';
+  searchResults: MovieResponse = {} as MovieResponse;
+  isLoading = false;
+  currentYear = new Date().getFullYear();
 
-  totalPages: number = 1;
+  totalPages = 1;
 
   constructor(
     private searchMovieService: SearchMovieService,
@@ -25,41 +27,54 @@ export class SearchMovieComponent {
   ) {
     // Initialize the search results
     this.searchQuery = this.searchMovieService.searchQuery();
-    this.loadMoviesResponse();
+    if (this.searchQuery) {
+      this.loadMoviesResponse();
+    }
   }
 
   loadMoviesResponse(): void {
-    // console.log('SearchMovies:', this.searchMovieService.searchQuery());
-    // console.log('Total Pages:', this.totalPages);
+    this.isLoading = true;
     this.searchMovieService
       .getSearchMovies(this.searchMovieService.searchQuery(), this.totalPages)
-      .subscribe((response: MovieResponse) => {
-        // console.log('SearchMovies:', response);
-        this.searchResults = response;
+      .subscribe({
+        next: (response: MovieResponse) => {
+          this.searchResults = response;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error al buscar películas:', error);
+          this.isLoading = false;
+        },
       });
   }
 
   searchMovies(): void {
-    // console.log(`Searching for: ${this.searchQuery}`);
+    if (!this.searchQuery.trim()) return;
+
     this.searchMovieService.searchQuery.set(this.searchQuery); // Update the search query in the service
     this.totalPages = 1; // Reset to the first page
-
     this.loadMoviesResponse(); // Load the movies based on the search query
   }
 
   viewMovieDetails(movieId: number): void {
     // Navigate to movie details page
-    // console.log(`Viewing details for movie ID: ${movieId}`);
     this.router.navigate(['/details']);
     this.detailsMovieService.movieId.set(movieId); // Guardamos el ID de la película en el servicio
   }
 
-  changePage(page: number): void {
-    // In a real application, this would fetch the specified page from the API
-    console.log(`Changing to page: ${page}`);
+  homePage(): void {
+    this.router.navigate(['/']);
+  }
 
-    // For demo purposes, just update the page number
+  changePage(page: number): void {
+    if (page === this.totalPages) return;
+
     this.totalPages = page;
+    this.scrollToTop();
     this.loadMoviesResponse();
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
