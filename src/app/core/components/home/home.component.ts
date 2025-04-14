@@ -7,10 +7,21 @@ import { Router } from '@angular/router';
 import { DetailsMovieService } from '../../services/details-movie.service';
 import { FormsModule } from '@angular/forms';
 import { SearchMovieService } from '../../services/search-movie.service';
+import { FooterComponent } from '../../../shared/components/footer/footer.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-home',
-  imports: [DecimalPipe, DatePipe, CommonModule, FormsModule],
+  imports: [
+    DecimalPipe,
+    DatePipe,
+    CommonModule,
+    FormsModule,
+    FooterComponent,
+    PaginationComponent,
+    SearchBarComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -22,7 +33,6 @@ export class HomeComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   isLoading = true;
-  currentYear = new Date().getFullYear();
 
   searchQuery = '';
 
@@ -52,7 +62,12 @@ export class HomeComponent implements OnInit {
   }
 
   // Metodo para buscar películas
-  searchMovies(): void {
+  searchMovies(query?: string): void {
+    // Si recibimos un query del componente hijo, lo usamos
+    if (query) {
+      this.searchQuery = query;
+    }
+
     if (!this.searchQuery.trim()) return;
 
     this.searchMovieService.searchQuery.set(this.searchQuery);
@@ -87,28 +102,6 @@ export class HomeComponent implements OnInit {
       this.loadMovies();
       this.scrollToTop();
     }
-  }
-
-  getPaginationArray(): number[] {
-    const maxVisiblePages = 5;
-    const pages: number[] = [];
-
-    let startPage = Math.max(
-      1,
-      this.currentPage - Math.floor(maxVisiblePages / 2)
-    );
-    const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
-
-    // Ajustar si estamos cerca del final
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-
-    return pages;
   }
 
   scrollToTop(): void {
