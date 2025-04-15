@@ -9,6 +9,7 @@ import { FooterComponent } from '../../shared/components/footer/footer.component
 import { Title } from '@angular/platform-browser';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
+import { MovieListComponent } from '../../shared/components/movie-list/movie-list.component';
 
 @Component({
   selector: 'app-search-movie',
@@ -18,6 +19,7 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
     FooterComponent,
     PaginationComponent,
     SearchBarComponent,
+    MovieListComponent,
   ],
   templateUrl: './search-movie.component.html',
   styleUrl: './search-movie.component.css',

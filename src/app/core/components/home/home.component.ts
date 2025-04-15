@@ -10,17 +10,17 @@ import { SearchMovieService } from '../../services/search-movie.service';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
+import { MovieListComponent } from '../../../shared/components/movie-list/movie-list.component';
 
 @Component({
   selector: 'app-home',
   imports: [
-    DecimalPipe,
-    DatePipe,
     CommonModule,
     FormsModule,
     FooterComponent,
     PaginationComponent,
     SearchBarComponent,
+    MovieListComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
       .subscribe((response: MovieResponse) => {
         this.movies = response.results;
         this.totalPages = response.total_pages;
+        this.currentPage = response.page;
       });
   }
 
