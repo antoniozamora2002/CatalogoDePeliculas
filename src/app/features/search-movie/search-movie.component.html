@@ -65,17 +65,9 @@
     }
 
     <!-- Loading State -->
-    @if (isLoading) {
-    <div class="flex flex-col items-center justify-center py-20">
-      <div
-        class="w-16 h-16 border-4 border-gray-600 border-t-blue-600 rounded-full animate-spin mb-4"
-      ></div>
-      <p class="text-gray-400">Buscando películas...</p>
-    </div>
-    }
 
     <!-- Movie Grid -->
-    @if (!isLoading && searchResults.results.length > 0) {
+    @if ( searchResults.results.length > 0) {
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
     >
@@ -174,8 +166,8 @@
     }
 
     <!-- Empty State -->
-    @if (!isLoading && searchQuery && (!searchResults.results ||
-    searchResults.results.length === 0)) {
+    @if (searchQuery && (!searchResults.results || searchResults.results.length
+    === 0)) {
     <div
       class="bg-gray-800/50 p-12 rounded-xl text-center max-w-2xl mx-auto my-12"
     >
@@ -208,8 +200,7 @@
         </ul>
       </div>
     </div>
-    } @if (!isLoading && searchResults.results && searchResults.results.length >
-    0) {
+    } @if (searchResults.results && searchResults.results.length > 0) {
     <app-pagination
       [currentPage]="currentPage"
       [totalPages]="totalPages"

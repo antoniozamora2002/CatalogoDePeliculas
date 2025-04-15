@@ -32,7 +32,6 @@ export class HomeComponent implements OnInit {
   movies: Movie[] = [];
   currentPage = 1;
   totalPages = 1;
-  isLoading = true;
 
   searchQuery = '';
 
@@ -51,17 +50,15 @@ export class HomeComponent implements OnInit {
   }
 
   loadMovies(): void {
-    this.isLoading = true;
     this.discoverMovies
       .getDiscoverMovies(this.currentPage)
       .subscribe((response: MovieResponse) => {
         this.movies = response.results;
         this.totalPages = response.total_pages;
-        this.isLoading = false;
       });
   }
 
-  // Metodo para buscar películas
+  // Método para buscar películas
   searchMovies(query?: string): void {
     // Si recibimos un query del componente hijo, lo usamos
     if (query) {
@@ -70,8 +67,16 @@ export class HomeComponent implements OnInit {
 
     if (!this.searchQuery.trim()) return;
 
+    // Guardar la consulta en el servicio
     this.searchMovieService.searchQuery.set(this.searchQuery);
-    this.router.navigate(['/search']);
+
+    // Navegar a la página de búsqueda con el parámetro query en la URL
+    this.router.navigate(['/search'], {
+      queryParams: {
+        query: this.searchQuery,
+        page: 1,
+      },
+    });
   }
 
   // Metodo para ver detalle de la película

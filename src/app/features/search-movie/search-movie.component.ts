@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchMovieService } from '../../core/services/search-movie.service';
 import { MovieResponse } from '../../core/models/Movie';
 import { DetailsMovieService } from '../../core/services/details-movie.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { Title } from '@angular/platform-browser';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -22,10 +22,15 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
   templateUrl: './search-movie.component.html',
   styleUrl: './search-movie.component.css',
 })
-export class SearchMovieComponent {
+export class SearchMovieComponent implements OnInit {
   searchQuery = '';
-  searchResults: MovieResponse = {} as MovieResponse;
-  isLoading = false;
+  searchResults: MovieResponse = {
+    page: 1,
+    results: [],
+    total_pages: 0,
+    total_results: 0,
+  };
+
   currentPage = 1;
   totalPages = 1;
 
@@ -33,18 +38,30 @@ export class SearchMovieComponent {
     private searchMovieService: SearchMovieService,
     private detailsMovieService: DetailsMovieService,
     private titleService: Title,
-    private router: Router
-  ) {
-    // Initialize the search results
-    this.searchQuery = this.searchMovieService.searchQuery();
-    if (this.searchQuery) {
-      this.loadMoviesResponse();
-      this.titleService.setTitle('Buscando: ' + this.searchQuery);
-    }
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    // Leer parámetros de URL
+    this.route.queryParams.subscribe((params) => {
+      if (params['query']) {
+        this.searchQuery = params['query'];
+        this.searchMovieService.searchQuery.set(this.searchQuery);
+
+        if (params['page']) {
+          this.currentPage = +params['page'];
+        } else {
+          this.currentPage = 1;
+        }
+
+        this.loadMoviesResponse();
+        this.titleService.setTitle('Buscando: ' + this.searchQuery);
+      }
+    });
   }
 
   loadMoviesResponse(): void {
-    this.isLoading = true;
     this.searchMovieService
       .getSearchMovies(this.searchMovieService.searchQuery(), this.currentPage)
       .subscribe({
@@ -52,11 +69,9 @@ export class SearchMovieComponent {
           this.searchResults = response;
           this.totalPages = response.total_pages;
           this.currentPage = response.page;
-          this.isLoading = false;
         },
         error: (error) => {
           console.error('Error al buscar películas:', error);
-          this.isLoading = false;
         },
       });
   }
@@ -64,9 +79,17 @@ export class SearchMovieComponent {
   searchMovies(): void {
     if (!this.searchQuery.trim()) return;
 
-    this.searchMovieService.searchQuery.set(this.searchQuery); // Update the search query in the service
-    this.currentPage = 1; // Reset to the first page
-    this.loadMoviesResponse(); // Load the movies based on the search query
+    this.searchMovieService.searchQuery.set(this.searchQuery);
+    this.currentPage = 1;
+
+    // Actualizar URL con los parámetros de búsqueda
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { query: this.searchQuery, page: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
+
+    this.loadMoviesResponse();
   }
 
   viewMovieDetails(movieId: number): void {
@@ -98,6 +121,14 @@ export class SearchMovieComponent {
   goToPage(page: number): void {
     if (page !== this.currentPage && page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+
+      // Actualizar URL con la nueva página
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { page: this.currentPage },
+        queryParamsHandling: 'merge',
+      });
+
       this.loadMoviesResponse();
       this.scrollToTop();
     }

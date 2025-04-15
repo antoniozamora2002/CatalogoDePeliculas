@@ -1,11 +1,12 @@
 @if (isLoading()) {
-<div class="overlay">
-  <div
-    class="fixed inset-0 flex items-center justify-center h-screen bg-gray-200/50 dark:bg-gray-900/50"
-  >
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+>
+  <div class="flex flex-col items-center">
     <div
-      class="w-32 h-32 border-8 border-blue-600 border-solid rounded-full animate-spin border-t-transparent dark:border-blue-800 dark:border-t-transparent"
+      class="w-16 h-16 border-4 border-blue-600 border-solid rounded-full animate-spin border-t-transparent"
     ></div>
+    <p class="mt-4 text-white font-medium">Cargando...</p>
   </div>
 </div>
 }
