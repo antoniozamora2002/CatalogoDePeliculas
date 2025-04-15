@@ -42,16 +42,6 @@
       (movieClick)="viewMovieDetails($event)"
     ></app-movie-list>
 
-    <!-- Loading State -->
-    @if (movies.length === 0) {
-    <div class="flex flex-col items-center justify-center py-20">
-      <div
-        class="w-16 h-16 border-4 border-gray-600 border-t-blue-600 rounded-full animate-spin mb-4"
-      ></div>
-      <p class="text-gray-400">Cargando películas...</p>
-    </div>
-    }
-
     <!-- Paginación -->
     <app-pagination
       [currentPage]="currentPage"

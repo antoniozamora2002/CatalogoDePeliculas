@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Movie, MovieResponse } from '../../models/Movie';
 import { DiscoverMovieService } from '../../services/discover-movie.service';
 import { Title } from '@angular/platform-browser';
-import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DetailsMovieService } from '../../services/details-movie.service';
 import { FormsModule } from '@angular/forms';
