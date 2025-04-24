@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
+  @if (!loading) {
+  <div class="max-w-6xl mx-auto">
+    <!-- Header with profile image and basic info -->
+    <div class="flex flex-col md:flex-row gap-8 mb-8">
+      <!-- Profile Image -->
+      <div class="w-full md:w-1/3 flex-shrink-0">
+        <div class="rounded-lg overflow-hidden shadow-xl bg-gray-800">
+          <img
+            [src]="'https://image.tmdb.org/t/p/w500' + actorData.profile_path"
+            [alt]="actorData.name"
+            class="w-full h-auto object-cover"
+          />
+        </div>
+
+        <!-- Social Links -->
+        <div class="mt-4 flex justify-center space-x-4">
+          @if (actorData.homepage) {
+          <a
+            [href]="actorData.homepage"
+            target="_blank"
+            class="text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            <span class="sr-only">Sitio web</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+              />
+            </svg>
+          </a>
+          } @if (actorData.imdb_id) {
+          <a
+            [href]="'https://www.imdb.com/name/' + actorData.imdb_id"
+            target="_blank"
+            class="text-yellow-400 hover:text-yellow-300 transition-colors"
+          >
+            <span class="sr-only">IMDb</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M14.31 9.588v4.824h-.664V9.588h.664zm-2.89 0v4.824h-.664V9.588h.664zm-2.011 0l.498 3.828.498-3.828h1.327v4.824h-.664V10.172l-.498 4.24h-.83l-.498-4.24v4.24h-.664V9.588h1.328zm10.264 4.824l-1.162-4.824h.664l.83 3.828.83-3.828h.664l-1.162 4.824h-.664zm3.312-2.156h1.162v.664h-1.162v1.494h-.664V9.588h2.158v.664h-1.494v1.992zm-16.98-2.656v4.824h-.664V9.588h.664zM24 12c0 6.627-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0s12 5.373 12 12zm-1 0c0-6.075-4.925-11-11-11S1 5.925 1 12s4.925 11 11 11 11-4.925 11-11z"
+              />
+            </svg>
+          </a>
+          }
+        </div>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="w-full md:w-2/3">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">
+          {{ actorData.name }}
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="bg-gray-800 p-4 rounded-lg">
+            <h3 class="text-gray-400 text-sm mb-1">Fecha de nacimiento</h3>
+            <p class="font-medium">{{ formattedBirthday }} ({{ age }} años)</p>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg">
+            <h3 class="text-gray-400 text-sm mb-1">Lugar de nacimiento</h3>
+            <p class="font-medium">{{ actorData.place_of_birth }}</p>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg">
+            <h3 class="text-gray-400 text-sm mb-1">Género</h3>
+            <p class="font-medium">{{ getGenderText(actorData.gender) }}</p>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg">
+            <h3 class="text-gray-400 text-sm mb-1">Conocido/a por</h3>
+            <p class="font-medium">{{ actorData.known_for_department }}</p>
+          </div>
+        </div>
+
+        <!-- Also Known As -->
+        @if (actorData.also_known_as && actorData.also_known_as.length > 0) {
+        <div class="mb-6">
+          <h2 class="text-xl font-semibold mb-3 border-b border-gray-700 pb-2">
+            También conocido/a como
+          </h2>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            @for (name of actorData.also_known_as; track $index) {
+            <li class="bg-gray-800 p-3 rounded-lg">
+              {{ name }}
+            </li>
+            }
+          </ul>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Biography -->
+    <div class="bg-gray-800 rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">Biografía</h2>
+      <div class="space-y-4">
+        @for (paragraph of actorData.biography.split('\n\n'); track $index) {
+        <p class="text-gray-300 leading-relaxed">
+          {{ paragraph }}
+        </p>
+        }
+      </div>
+    </div>
+
+    <!-- Popularity -->
+    <div class="bg-gray-800 rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-3">Popularidad</h2>
+      <div class="w-full bg-gray-700 rounded-full h-4">
+        <div
+          class="bg-blue-500 h-4 rounded-full"
+          [style.width.%]="
+            actorData.popularity > 100 ? 100 : actorData.popularity
+          "
+        ></div>
+      </div>
+      <p class="mt-2 text-gray-400 text-sm">
+        Índice de popularidad: {{ actorData.popularity.toFixed(1) }}
+      </p>
+    </div>
+  </div>
+  }
+</div>

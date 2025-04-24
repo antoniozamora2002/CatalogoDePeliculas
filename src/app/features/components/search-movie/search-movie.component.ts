@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SearchMovieService } from '../../core/services/search-movie.service';
-import { MovieResponse } from '../../core/models/Movie';
-import { DetailsMovieService } from '../../core/services/details-movie.service';
+import { SearchMovieService } from '../../services/search-movie.service';
+import { MovieResponse } from '../../../core/models/Movie';
+import { DetailsMovieService } from '../../services/details-movie.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { Title } from '@angular/platform-browser';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
-import { MovieListComponent } from '../../shared/components/movie-list/movie-list.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
+import { MovieListComponent } from '../../../shared/components/movie-list/movie-list.component';
 
 @Component({
   selector: 'app-search-movie',

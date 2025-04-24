@@ -1,5 +1,6 @@
 <div class="bg-gray-900 min-h-screen p-6 text-white">
-  <div class="max-w-6xl mx-auto">
+  @if (!loading) {
+  <div class="mx-auto">
     <!-- Movie Header with Backdrop -->
     <div class="relative mb-8 rounded-xl overflow-hidden">
       <div
@@ -32,9 +33,7 @@
           <span
             class="bg-gray-800 bg-opacity-80 px-3 py-1 rounded-full text-sm"
           >
-            {{ movie.vote_average.toFixed(1) }}/10 ({{
-              movie.vote_count
-            }}
+            {{ movie.vote_average.toFixed(1) }}/10 ({{ movie.vote_count }}
             votos)
           </span>
           @if (movie.adult) {
@@ -148,6 +147,33 @@
           <p class="text-gray-300">{{ movie.overview }}</p>
         </div>
 
+        <!-- Cast -->
+        <div class="bg-gray-800 p-4 rounded-lg mb-6">
+          <h3 class="font-semibold mb-2">Actores Principales</h3>
+          <div class="overflow-x-auto flex gap-4 py-4">
+            @for (actor of cast; track $index) {
+            <div
+              class="flex-shrink-0 w-32 text-center cursor-pointer"
+              (click)="selectActor(actor.id)"
+            >
+              <img
+                [src]="
+                  actor.profile_path
+                    ? 'https://image.tmdb.org/t/p/w200' + actor.profile_path
+                    : 'https://via.placeholder.com/50x75'
+                "
+                [alt]="actor.name"
+                class="w-20 h-20 rounded-full object-cover mx-auto mb-2"
+              />
+              <h4 class="font-semibold text-sm truncate">{{ actor.name }}</h4>
+              <p class="text-xs text-gray-400">
+                {{ actor.character }}
+              </p>
+            </div>
+            }
+          </div>
+        </div>
+
         <!-- Production Countries -->
         <div class="bg-gray-800 p-4 rounded-lg mb-6">
           <h3 class="font-semibold mb-2">Países de Producción</h3>
@@ -178,6 +204,29 @@
           </div>
         </div>
 
+        <!-- Videos -->
+        @if (movieVideos && movieVideos.length > 0) {
+        <div class="bg-gray-800 p-4 rounded-lg mb-6">
+          <h3 class="font-semibold mb-2">Videos</h3>
+          <div class="overflow-x-auto flex gap-4 py-4">
+            @for (video of movieVideos; track $index) {
+            <div
+              class="bg-gray-700 p-4 rounded-lg flex-shrink-0 w-96 items-center text-center"
+            >
+              <h4 class="text-sm font-semibold mb-2">{{ video.name }}</h4>
+              <iframe
+                [src]="video.url"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                class="w-full h-48 rounded-lg"
+              ></iframe>
+            </div>
+            }
+          </div>
+        </div>
+        }
+
         <!-- Production Companies -->
         <div class="bg-gray-800 p-4 rounded-lg">
           <h3 class="font-semibold mb-4">Empresas Productoras</h3>
@@ -206,4 +255,5 @@
       </div>
     </div>
   </div>
+  }
 </div>
