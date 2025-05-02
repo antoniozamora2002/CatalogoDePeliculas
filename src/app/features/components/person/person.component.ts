@@ -2,6 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { PersonService } from '../../services/person.service';
 import { CommonModule } from '@angular/common';
 import { Actor } from '../../models/Person';
+import {
+  MappedCastMember,
+  MovieCredits,
+} from '../../models/PersonMovieCredits';
 
 @Component({
   selector: 'app-person',
@@ -13,6 +17,7 @@ export class PersonComponent implements OnInit {
   private personService = inject(PersonService);
 
   actorData!: Actor;
+  personMovieCredits: MappedCastMember[] = [];
   personID: number | 0 = 0;
 
   formattedBirthday = '';
@@ -28,11 +33,20 @@ export class PersonComponent implements OnInit {
       this.age = this.calculateAge(this.actorData.birthday);
     }
     this.loadPersonDetails();
+    this.loadPersonMovieCredits();
   }
 
   loadPersonDetails() {
-    console.log(this.personService.personId());
-    this.personID = this.personService.personId();
+    const previousPersonId = localStorage.getItem('previousPersonId');
+    const currentPersonId = this.personService.personId();
+
+    if (currentPersonId === 0 && previousPersonId) {
+      this.personID = +previousPersonId;
+    } else {
+      this.personID = currentPersonId;
+      localStorage.setItem('previousPersonId', currentPersonId.toString());
+    }
+
     this.personService.getDetailsPerson(this.personID).subscribe({
       next: (response: Actor) => {
         console.log('getDetailsPerson:', response);
@@ -45,6 +59,41 @@ export class PersonComponent implements OnInit {
         console.error('Error fetching person details:', error);
       },
     });
+  }
+
+  loadPersonMovieCredits() {
+    const previousPersonId = localStorage.getItem('previousPersonId');
+    const currentPersonId = this.personService.personId();
+
+    if (currentPersonId === 0 && previousPersonId) {
+      this.personID = +previousPersonId;
+    } else {
+      this.personID = currentPersonId;
+      localStorage.setItem('previousPersonId', currentPersonId.toString());
+    }
+
+    this.personService.getPersonMovieCredits(this.personID).subscribe({
+      next: (response: MovieCredits) => {
+        console.log('getPersonMovieCredits:', response);
+        this.personMovieCredits = response.cast.map((castMember) => ({
+          id: castMember.id,
+          title: castMember.title,
+          character: castMember.character,
+          releaseDate: castMember.release_date,
+          posterPath: castMember.poster_path,
+          voteAverage: castMember.vote_average,
+        }));
+      },
+      error: (error) => {
+        console.error('Error fetching person movie credits:', error);
+      },
+    });
+  }
+
+  getTopCredits(): MappedCastMember[] {
+    return this.personMovieCredits
+      .sort((a, b) => b.voteAverage - a.voteAverage) // Ordenar por voteAverage descendente
+      .slice(0, 10); // Tomar solo los primeros 10
   }
 
   formatDate(dateString: string): string {
