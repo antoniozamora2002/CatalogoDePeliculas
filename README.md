@@ -12,23 +12,31 @@ Un proyecto en **Angular** que muestra películas usando la API de **The Movie D
 ✅ Listado de películas con imágenes y detalles 🎞️  
 ✅ Paginación funcional 🔄  
 ✅ Diseño responsive con Tailwind CSS 🎨  
-✅ Proyecto en Angular con Standalone Components ⚡
+✅ Proyecto en Angular con Standalone Components ⚡  
+✅ Uso de Signals para gestión de estado 📶
 
 ---
 
 ## 🚀 **Instalación y Ejecución**
 
+### 📋 **Requisitos Previos**
+
+- **Node.js**: Versión **20 (LTS)** o superior (Se recomienda v20.19.6).
+- **NPM**: Gestor de paquetes incluido con Node.js.
+
 ### 1️⃣ **Clonar el repositorio**
 
 ```bash
 git clone https://github.com/antoniozamora2002/CatalogoDePeliculas.git
-cd cinema-db
+cd CatalogoDePeliculas
 ```
 
 ### 2️⃣ **Instalar dependencias**
 
+Para una instalación limpia y exacta de las versiones probadas (recomendado):
+
 ```bash
-npm install
+npm ci
 ```
 
 ### 3️⃣ **Configurar API Key**
@@ -63,16 +71,17 @@ Abre [http://localhost:4200](http://localhost:4200) en tu navegador.
 
 ## 🛠 **Tecnologías usadas**
 
-- **Angular** 🚀
-- **TypeScript** 📝
+- **Angular 19** 🚀
+- **Node.js 20 (LTS)** 🟩
+- **TypeScript 5.7** 📝
 - **RxJS** 🔄
-- **Tailwind CSS** 🎨
+- **Tailwind CSS 3.4** 🎨
 - **TMDb API** 🎥
 
 ---
 
 ## 👤 **Autor**
 
-💡 Creado por [Antonio Zamora](https://github.com/antoniozamora2002) 🤖
+💡 Creado por [Antonio Zamora Pastor](https://github.com/antoniozamora2002) 🤖
 
 Si te gustó el proyecto, ¡dale una ⭐ en GitHub! 😃
